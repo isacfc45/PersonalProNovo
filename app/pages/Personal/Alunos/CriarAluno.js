@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import {criarUsuario} from '../../../services/AlunoService';
+import { AuthContext } from "../../../../App";
 
 
-const CriarAluno = () => {
+const CriarAluno = ({navigation}) => {
     const [usuario, setUsuario] = useState({
-        email: "",
-        nome: "",
+        email: "aluno@aluno.com",
+        senha: "123456",
     })
 
+    const {user} = useContext(AuthContext);
+
     const cadastrar = () => {
-        
+        criarUsuario(user.uid, usuario.email, usuario.senha)
+        navigation.navigate("Alunos");
     }
 
     return(
@@ -18,11 +23,14 @@ const CriarAluno = () => {
                 style={styles.input}
                 placeholder="E-mail"
                 onChangeText={(email) => setUsuario({...usuario, email})}
+                value={usuario.email}
             />
             <TextInput 
                 style={styles.input}
-                placeholder="Nome"
-                onChangeText={(nome) => setUsuario({...usuario, nome})}
+                placeholder="Senha"
+                onChangeText={(senha) => setUsuario({...usuario, senha})}
+                value={usuario.senha}
+                secureTextEntry
             />
             <TouchableOpacity
                 style={styles.button}
