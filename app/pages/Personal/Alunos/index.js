@@ -1,11 +1,20 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Aluno from '../Aluno';
 import CriarAluno from './CriarAluno';
+import { buscarAlunos } from '../../../services/AlunoService';
+import { AuthContext } from '../../../../App';
+import ListarAlunos from './components/ListarAlunos';
 
 const Alunos = ({navigation}) => {
+    const {user} = useContext(AuthContext);
+    let lista = []
+    const listar = async() => {
+        lista = await buscarAlunos(user.uid);
+    }
+    listar();
     return(
         <View style={styles.container}>
             <View style={styles.cima}>
