@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -7,14 +7,43 @@ import CriarAluno from './CriarAluno';
 import { buscarAlunos } from '../../../services/AlunoService';
 import { AuthContext } from '../../../../App';
 import ListarAlunos from './components/ListarAlunos';
+import { FlatList } from 'react-native-gesture-handler';
 
 const Alunos = ({navigation}) => {
     const {user} = useContext(AuthContext);
-    let lista = []
+
+    let lista = [];
+
+
+    // const [lista, setLista] = useState([]);
+
+
     const listar = async() => {
-        lista = await buscarAlunos(user.uid);
+
+        lista = await buscarAlunos(user.id);
+
+        // const dados = await buscarAlunos(user.uid);
+        // setLista(dados);
+
+        console.log(lista)
     }
     listar();
+
+    const teste = [
+        {
+            email: "Aluno 1",
+            uid: "19/05/2023"
+        },
+        {
+            email: "Aluno 2",
+            uid: "19/05/2023"
+        },
+        {
+            email: "Aluno 3",
+            uid: "19/05/2023"
+        },
+    ];
+
     return(
         <View style={styles.container}>
             <View style={styles.cima}>
@@ -39,123 +68,36 @@ const Alunos = ({navigation}) => {
                     <Text style={styles.textHeader}>Alunos</Text>
                 </View>
                 <View style={styles.conteudoBaixo}>
-                    <TouchableOpacity 
-                        style={styles.cardAluno}
-                        onPress={() => {navigation.navigate(Aluno)}}
-                    >
-                        <View style={styles.esqCardAluno}>
-                            <View style={styles.fotoAluno}>
-                                <Icon name='location-history' size={50} color="#650808" />
-                            </View>
-                            <View style={styles.infoAluno}>
-                                <Text style={styles.nomeAluno}>Leonan Teixiera</Text>
-                                <Text style={styles.dataAvaliação}>Av: 05/05/2023</Text>
-                            </View>
-                        </View>
-                        <View style={styles.dirCardAluno}>
-                            <TouchableOpacity>
-                                <Icon name='assignment' size={30} color="#650808"/>
+                    <FlatList 
+                        data={teste}
+                        renderItem={ ({item}) => 
+                            <TouchableOpacity 
+                                style={styles.cardAluno}
+                                onPress={() => {navigation.navigate(Aluno , item )}}
+                            >
+                                <View style={styles.esqCardAluno}>
+                                    <View style={styles.fotoAluno}>
+                                        <Icon name='location-history' size={50} color="#650808" />
+                                    </View>
+                                    <View style={styles.infoAluno}>
+                                        <Text style={styles.nomeAluno}>{item.email}</Text>
+                                        <Text style={styles.dataAvaliação}>Data: {item.uid}</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.dirCardAluno}>
+                                    <TouchableOpacity>
+                                        <Icon name='assignment' size={30} color="#650808"/>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity>
+                                        <Icon name='multitrack-audio' size={30} color="#650808"/>
+                                    </TouchableOpacity>
+                                </View>
                             </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Icon name='multitrack-audio' size={30} color="#650808"/>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cardAluno}>
-                        <View style={styles.esqCardAluno}>
-                            <View style={styles.fotoAluno}>
-                                <Icon name='location-history' size={50} color="#650808" />
-                            </View>
-                            <View style={styles.infoAluno}>
-                                <Text style={styles.nomeAluno}>Leonan Teixiera</Text>
-                                <Text style={styles.dataAvaliação}>Av: 05/05/2023</Text>
-                            </View>
-                        </View>
-                        <View style={styles.dirCardAluno}>
-                            <TouchableOpacity>
-                                <Icon name='assignment' size={30} color="#650808"/>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Icon name='multitrack-audio' size={30} color="#650808"/>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cardAluno}>
-                        <View style={styles.esqCardAluno}>
-                            <View style={styles.fotoAluno}>
-                                <Icon name='location-history' size={50} color="#650808" />
-                            </View>
-                            <View style={styles.infoAluno}>
-                                <Text style={styles.nomeAluno}>Leonan Teixiera</Text>
-                                <Text style={styles.dataAvaliação}>Av: 05/05/2023</Text>
-                            </View>
-                        </View>
-                        <View style={styles.dirCardAluno}>
-                            <TouchableOpacity>
-                                <Icon name='assignment' size={30} color="#650808"/>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Icon name='multitrack-audio' size={30} color="#650808"/>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cardAluno}>
-                        <View style={styles.esqCardAluno}>
-                            <View style={styles.fotoAluno}>
-                                <Icon name='location-history' size={50} color="#650808" />
-                            </View>
-                            <View style={styles.infoAluno}>
-                                <Text style={styles.nomeAluno}>Leonan Teixiera</Text>
-                                <Text style={styles.dataAvaliação}>Av: 05/05/2023</Text>
-                            </View>
-                        </View>
-                        <View style={styles.dirCardAluno}>
-                            <TouchableOpacity>
-                                <Icon name='assignment' size={30} color="#650808"/>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Icon name='multitrack-audio' size={30} color="#650808"/>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cardAluno}>
-                        <View style={styles.esqCardAluno}>
-                            <View style={styles.fotoAluno}>
-                                <Icon name='location-history' size={50} color="#650808" />
-                            </View>
-                            <View style={styles.infoAluno}>
-                                <Text style={styles.nomeAluno}>Leonan Teixiera</Text>
-                                <Text style={styles.dataAvaliação}>Av: 05/05/2023</Text>
-                            </View>
-                        </View>
-                        <View style={styles.dirCardAluno}>
-                            <TouchableOpacity>
-                                <Icon name='assignment' size={30} color="#650808"/>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Icon name='multitrack-audio' size={30} color="#650808"/>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cardAluno}>
-                        <View style={styles.esqCardAluno}>
-                            <View style={styles.fotoAluno}>
-                                <Icon name='location-history' size={50} color="#650808" />
-                            </View>
-                            <View style={styles.infoAluno}>
-                                <Text style={styles.nomeAluno}>Leonan Teixiera</Text>
-                                <Text style={styles.dataAvaliação}>Av: 05/05/2023</Text>
-                            </View>
-                        </View>
-                        <View style={styles.dirCardAluno}>
-                            <TouchableOpacity>
-                                <Icon name='assignment' size={30} color="#650808"/>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Icon name='multitrack-audio' size={30} color="#650808"/>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
+                        }
+                        keyExtractor={item => item.id}
+                        style={styles.fletList}
+                    />
+                    
                     <View style={styles.Add}>
                         <TouchableOpacity 
                             style={styles.buttonAdd}
@@ -244,6 +186,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '100%',
     },
+    fletList: {
+        flex: 1,
+        width: '100%',
+        display: 'flex',
+        marginLeft: 40,
+        marginTop: 30,
+    },
     cardAluno: {
         width: '90%',
         height: 70,
@@ -300,7 +249,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 30,
-        marginTop: 20,
     },
 })
 

@@ -3,7 +3,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Avaliacoes from "./Avaliacoes";
 
-const Aluno = ({navigation}) => {
+const Aluno = ({navigation, route}) => {
+
+    console.log(route);
     return(
         <View style={styles.container}>
             <View style={styles.cima}>
