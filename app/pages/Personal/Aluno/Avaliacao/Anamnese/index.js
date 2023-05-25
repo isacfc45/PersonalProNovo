@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CheckBox from 'react-native-check-box';
+import { AuthContext } from "../../../../../../App";
+import { criarAnamnese } from "../../../../../services/AlunoService";
 
-const Anamnese = () => {
+const Anamnese = ({navigation, route}) => {
+    const [anamnese, setAnamnese] = useState({
+        objetivo: "A",
+        restricoes: "B",
+        medicamentos: "CCC",
+        dores: "D",
+        observacoes: "E"
+    })
+
+    const {user} = useContext(AuthContext);
+    const aluno = route.params.aluno;
+    const avaliacao = route.params.avaliacao;
+
+    const cadastroAnamnese = () => {
+        criarAnamnese(user.uid, aluno.uid, avaliacao.uid, anamnese);
+        navigation.navigate("Avaliacao", {aluno, avaliacao})
+    }
+
     return(
         <ScrollView style={styles.container}>
             <View style={styles.cima}>
@@ -11,7 +30,7 @@ const Anamnese = () => {
                     <View style={styles.esqCima}>
                         <View style={styles.logo}></View>
                         <View style={styles.name}>
-                            <Text style={styles.textName}>Peronsal Fulano</Text>
+                            <Text style={styles.textName}>{user.email}</Text>
                             <Text style={styles.infoName}>CREF: 111111-G</Text>
                         </View>
                     </View>
@@ -25,13 +44,15 @@ const Anamnese = () => {
             <View style={styles.baixo}>
                 <View style={styles.header}>
                     <Icon name="location-history" size={35} color="#650808"/>
-                    <Text style={styles.textHeader}>Leonan Teixeira</Text>
+                    <Text style={styles.textHeader}>{aluno.email}</Text>
                 </View>
                     <Text style={styles.avaliacaoNome}>Anamnese</Text>
                 <View style={styles.conteudoBaixo}>
                     <TextInput 
                         style={styles.input}
                         placeholder="Objetivo"
+                        onChangeText={(objetivo) => setAnamnese({...anamnese, objetivo})}
+                        value={anamnese.objetivo}
                     />
                     {/* <View style={styles.caixa}>
                         <Text style={styles.label}>Nível de condicionamento</Text>
@@ -89,24 +110,32 @@ const Anamnese = () => {
                     <TextInput 
                         style={styles.input}
                         placeholder="Restrições"
+                        onChangeText={(restricoes) => setAnamnese({...anamnese, restricoes})}
+                        value={anamnese.restricoes}
                     />
                     <TextInput 
                         style={styles.input}
                         placeholder="Medicamentos"
+                        onChangeText={(medicamentos) => setAnamnese({...anamnese, medicamentos})}
+                        value={anamnese.medicamentos}
                     />
                     <TextInput 
                         style={styles.input}
                         placeholder="Dores"
+                        onChangeText={(dores) => setAnamnese({...anamnese, dores})}
+                        value={anamnese.dores}
                     />
                     <TextInput 
                         multiline={true}
                         numberOfLines={4}
                         style={styles.input}
                         placeholder="Observações"
+                        onChangeText={(observacoes) => setAnamnese({...anamnese, observacoes})}
+                        value={anamnese.observacoes}
                     />
                     <TouchableOpacity
                         style={styles.button}
-                        
+                        onPress={() => {cadastroAnamnese()}}                        
                     >
                     <Text style={styles.textoBotao}>Salvar</Text>
                     </TouchableOpacity>

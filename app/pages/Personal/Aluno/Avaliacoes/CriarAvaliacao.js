@@ -14,7 +14,7 @@ const CriarAvaliacao = ({route, navigation}) => {
     const {user} = useContext(AuthContext);
 
     const cadastrar = () => {
-        criarAvaliacao(user.uid, aluno.uid, avaliacao.nome)
+        criarAvaliacao(user.uid, aluno.uid, avaliacao)
         navigation.navigate("Avaliacoes", aluno);
     }
 

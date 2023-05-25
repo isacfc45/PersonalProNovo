@@ -53,7 +53,7 @@ const Avaliacoes = ({route, navigation}) => {
                         renderItem={ ({item}) => 
                             <TouchableOpacity 
                                 style={styles.cardAluno}
-                                onPress={() => {navigation.navigate("Avaliacao", {item, aluno})}}
+                                onPress={() => {navigation.navigate("Avaliacao", {item, aluno} )}}
                             >
                                 <View style={styles.esqCardAluno}>
                                     <View style={styles.fotoAluno}>

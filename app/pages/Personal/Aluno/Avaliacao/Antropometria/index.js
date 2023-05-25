@@ -1,8 +1,38 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { AuthContext } from "../../../../../../App";
+import { criarAntropometria } from "../../../../../services/AlunoService";
 
-const Antropometria = () => {
+const Antropometria = ({navigation, route}) => {
+    const [antropometria, setAntropometria] = useState({
+        peso: "83.2",
+        estatura: "1.7",
+        pescoco: "0",
+        ombro: "115",
+        torax: "100.7",
+        cintura: "93",
+        abdomen: "97.7",
+        quadril: "100",
+        bracoD: "33.3",
+        bracoE: "32.2",
+        antebracoD: "28.6",
+        antebracoE: "26.5",
+        coxaD: "56",
+        coxaE: "54.7",
+        panturrilhaD: "39.2",
+        panturrilhaE: "37.5"
+    })
+
+    const {user} = useContext(AuthContext);
+    const aluno = route.params.aluno;
+    const avaliacao = route.params.avaliacao;
+
+    const cadastroAntropometria = () => {
+        criarAntropometria(user.uid, aluno.uid, avaliacao.uid, antropometria);
+        navigation.navigate("Avaliacao", {aluno, avaliacao});
+    }
+
     return(
         <ScrollView>
             <View style={styles.cima}>
@@ -10,7 +40,7 @@ const Antropometria = () => {
                     <View style={styles.esqCima}>
                         <View style={styles.logo}></View>
                         <View style={styles.name}>
-                            <Text style={styles.textName}>Peronsal Fulano</Text>
+                            <Text style={styles.textName}>{user.email}</Text>
                             <Text style={styles.infoName}>CREF: 111111-G</Text>
                         </View>
                     </View>
@@ -24,7 +54,7 @@ const Antropometria = () => {
             <View style={styles.baixo}>
                 <View style={styles.header}>
                     <Icon name="location-history" size={35} color="#650808"/>
-                    <Text style={styles.textHeader}>Leonan Teixeira</Text>
+                    <Text style={styles.textHeader}>{aluno.email}</Text>
                 </View>
                     <Text style={styles.avaliacaoNome}>Antropometria</Text>
                 <View style={styles.conteudoBaixo}>
@@ -32,10 +62,14 @@ const Antropometria = () => {
                         <TextInput 
                             style={styles.input}
                             placeholder="Peso"
+                            onChangeText={(peso) => setAntropometria({...antropometria, peso})}
+                            value={antropometria.peso}
                         />
                         <TextInput 
                             style={styles.input}
                             placeholder="Estatura"
+                            onChangeText={(estatura) => setAntropometria({...antropometria, estatura})}
+                            value={antropometria.estatura}
                         />
                     </View>
                     <View style={styles.divisor}></View>
@@ -43,30 +77,42 @@ const Antropometria = () => {
                         <TextInput 
                             style={styles.input}
                             placeholder="Pescoço"
+                            onChangeText={(pescoco) => setAntropometria({...antropometria, pescoco})}
+                            value={antropometria.pescoco}
                         />
                         <TextInput 
                             style={styles.input}
                             placeholder="Ombro"
+                            onChangeText={(ombro) => setAntropometria({...antropometria, ombro})}
+                            value={antropometria.ombro}
                         />
                     </View>
                     <View style={styles.linha}>
                         <TextInput 
                             style={styles.input}
                             placeholder="Toráx"
+                            onChangeText={(torax) => setAntropometria({...antropometria, torax})}
+                            value={antropometria.torax}
                         />
                         <TextInput 
                             style={styles.input}
                             placeholder="Cintura"
+                            onChangeText={(cintura) => setAntropometria({...antropometria, cintura})}
+                            value={antropometria.cintura}
                         />
                     </View>
                     <View style={styles.linha}>
                         <TextInput 
                             style={styles.input}
                             placeholder="Abdômen"
+                            onChangeText={(abdomen) => setAntropometria({...antropometria, abdomen})}
+                            value={antropometria.abdomen}
                         />
                         <TextInput 
                             style={styles.input}
                             placeholder="Quadril"
+                            onChangeText={(quadril) => setAntropometria({...antropometria, quadril})}
+                            value={antropometria.quadril}
                         />
                     </View>
                     <View style={styles.divisor}></View>
@@ -74,45 +120,61 @@ const Antropometria = () => {
                         <TextInput 
                             style={styles.input}
                             placeholder="Braço D"
+                            onChangeText={(bracoD) => setAntropometria({...antropometria, bracoD})}
+                            value={antropometria.bracoD}
                         />
                         <TextInput 
                             style={styles.input}
                             placeholder="Braço E"
+                            onChangeText={(bracoE) => setAntropometria({...antropometria, bracoE})}
+                            value={antropometria.bracoE}
                         />
                     </View>
                     <View style={styles.linha}>
                         <TextInput 
                             style={styles.input}
                             placeholder="Antebraço D"
+                            onChangeText={(antebracoD) => setAntropometria({...antropometria, antebracoD})}
+                            value={antropometria.antebracoD}
                         />
                         <TextInput 
                             style={styles.input}
                             placeholder="Antebraço E"
+                            onChangeText={(antebracoE) => setAntropometria({...antropometria, antebracoE})}
+                            value={antropometria.antebracoE}
                         />
                     </View>
                     <View style={styles.linha}>
                         <TextInput 
                             style={styles.input}
                             placeholder="Coxa D"
+                            onChangeText={(coxaD) => setAntropometria({...antropometria, coxaD})}
+                            value={antropometria.coxaD}
                         />
                         <TextInput 
                             style={styles.input}
                             placeholder="Coxa E"
+                            onChangeText={(coxaE) => setAntropometria({...antropometria, coxaE})}
+                            value={antropometria.coxaE}
                         />
                     </View>
                     <View style={styles.linha}>
                         <TextInput 
                             style={styles.input}
                             placeholder="Panturrilha D"
+                            onChangeText={(panturrilhaD) => setAntropometria({...antropometria, panturrilhaD})}
+                            value={antropometria.panturrilhaD}
                         />
                         <TextInput 
                             style={styles.input}
                             placeholder="Panturrilha E"
+                            onChangeText={(panturrilhaE) => setAntropometria({...antropometria, panturrilhaE})}
+                            value={antropometria.panturrilhaE}
                         />
                     </View>
                     <TouchableOpacity
                         style={styles.button}
-                        
+                        onPress={() => {cadastroAntropometria()}}
                     >
                     <Text style={styles.textoBotao}>Salvar</Text>
                     </TouchableOpacity>

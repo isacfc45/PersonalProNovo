@@ -1,8 +1,33 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { AuthContext } from "../../../../../../App";
+import { criarDobras } from "../../../../../services/AlunoService";
 
-const Dobras = () => {
+
+const Dobras = ({navigation, route}) => {
+
+    const [dobras, setDobras] = useState({
+        tricipital: "13",
+        bicipital: "0",
+        peitoral: "15",
+        subescapular: "25",
+        axilarMedia: "23",
+        suprailiaca: "24",
+        abdominal: "43",
+        coxa: "17",
+        panturrilha: "0"
+    })
+
+    const {user} = useContext(AuthContext);
+    const aluno = route.params.aluno;
+    const avaliacao = route.params.avaliacao;
+
+    const cadastroDobras = () => {
+        criarDobras(user.uid, aluno.uid, avaliacao.uid, dobras);
+        navigation.navigate("Avaliacoes", {aluno, avaliacao});
+    }
+
     return(
         <ScrollView>
             <View style={styles.cima}>
@@ -10,7 +35,7 @@ const Dobras = () => {
                     <View style={styles.esqCima}>
                         <View style={styles.logo}></View>
                         <View style={styles.name}>
-                            <Text style={styles.textName}>Peronsal Fulano</Text>
+                            <Text style={styles.textName}>{user.email}</Text>
                             <Text style={styles.infoName}>CREF: 111111-G</Text>
                         </View>
                     </View>
@@ -24,7 +49,7 @@ const Dobras = () => {
             <View style={styles.baixo}>
                 <View style={styles.header}>
                     <Icon name="location-history" size={35} color="#650808"/>
-                    <Text style={styles.textHeader}>Leonan Teixeira</Text>
+                    <Text style={styles.textHeader}>{aluno.email}</Text>
                 </View>
                     <Text style={styles.avaliacaoNome}>Dobras Cultâneas</Text>
                 <View style={styles.conteudoBaixo}>
@@ -32,51 +57,69 @@ const Dobras = () => {
                         <TextInput 
                             style={styles.input}
                             placeholder="Tricipital"
+                            onChangeText={(tricipital) => setDobras({...dobras, tricipital})}
+                            value={dobras.tricipital}
                         />
                         <TextInput 
                             style={styles.input}
                             placeholder="Bicipital"
+                            onChangeText={(bicipital) => setDobras({...dobras, bicipital})}
+                            value={dobras.bicipital}
                         />
                     </View>
                     <View style={styles.linha}>
                         <TextInput 
                             style={styles.input}
                             placeholder="Peitoral"
+                            onChangeText={(peitoral) => setDobras({...dobras, peitoral})}
+                            value={dobras.peitoral}
                         />
                         <TextInput 
                             style={styles.input}
                             placeholder="Subescapular"
+                            onChangeText={(subescapular) => setDobras({...dobras, subescapular})}
+                            value={dobras.subescapular}
                         />
                     </View>
                     <View style={styles.linha}>
                         <TextInput 
                             style={styles.input}
                             placeholder="Axilar-média"
+                            onChangeText={(axilarMedia) => setDobras({...dobras, axilarMedia})}
+                            value={dobras.axilarMedia}
                         />
                         <TextInput 
                             style={styles.input}
                             placeholder="Suprailíaca"
+                            onChangeText={(suprailiaca) => setDobras({...dobras, suprailiaca})}
+                            value={dobras.suprailiaca}
                         />
                     </View>
                     <View style={styles.linha}>
                         <TextInput 
                             style={styles.input}
                             placeholder="Abdominal"
+                            onChangeText={(abdominal) => setDobras({...dobras, abdominal})}
+                            value={dobras.abdominal}
                         />
                         <TextInput 
                             style={styles.input}
                             placeholder="Coxa"
+                            onChangeText={(coxa) => setDobras({...dobras, coxa})}
+                            value={dobras.coxa}
                         />
                     </View>
                     <View style={styles.linha}>
                         <TextInput 
                             style={styles.input}
                             placeholder="Panturrilha"
+                            onChangeText={(panturrilha) => setDobras({...dobras, panturrilha})}
+                            value={dobras.panturrilha}
                         />
                     </View>
                     <TouchableOpacity
                         style={styles.button}
-                        
+                        onPress={() => {cadastroDobras()}}
                     >
                     <Text style={styles.textoBotao}>Salvar</Text>
                     </TouchableOpacity>

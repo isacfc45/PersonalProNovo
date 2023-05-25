@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Anamnese from "./Anamnese";
-import Antropometria from "./Antropometria";
-import Dobras from "./Dobras";
+import { AuthContext } from "../../../../../App";
 
 
-const Avaliacao = ({navigation}) => {
+const Avaliacao = ({navigation, route}) => {
+    const {user} = useContext(AuthContext);
+    const aluno = route.params.aluno;
+    const avaliacao = route.params.item || route.params.avaliacao;
+    
+
     return(
         <ScrollView style={styles.container}>
             <View style={styles.cima}>
@@ -14,7 +17,7 @@ const Avaliacao = ({navigation}) => {
                     <View style={styles.esqCima}>
                         <View style={styles.logo}></View>
                         <View style={styles.name}>
-                            <Text style={styles.textName}>Peronsal Fulano</Text>
+                            <Text style={styles.textName}>{user.email}</Text>
                             <Text style={styles.infoName}>CREF: 111111-G</Text>
                         </View>
                     </View>
@@ -28,18 +31,18 @@ const Avaliacao = ({navigation}) => {
             <View style={styles.baixo}>
                 <View style={styles.header}>
                     <Icon name="location-history" size={35} color="#650808"/>
-                    <Text style={styles.textHeader}>Leonan Teixeira</Text>
+                    <Text style={styles.textHeader}>{aluno.email}</Text>
                 </View>
                 <View style={styles.avaliacaoCont}>
-                    <Text style={styles.avaliacaoNome}>Avaliação 1</Text>
-                    <Text style={styles.avaliacaoInfo}>05/05/2023</Text>
+                    <Text style={styles.avaliacaoNome}>{avaliacao.nome}</Text>
+                    <Text style={styles.avaliacaoInfo}>{avaliacao.data.seconds}</Text>
                 </View>
                 <View style={styles.conteudoBaixo}>
                     <View style={styles.linha}>
                         <View style={styles.card}>
                             <TouchableOpacity 
                                 style={styles.buttonCard}
-                                onPress={() => {navigation.navigate(Anamnese)}}
+                                onPress={() => {navigation.navigate("Anamnese", {aluno, avaliacao})}}
                             >
                                 <Icon name="assignment" size={50} color="#ED4747"/>
                             </TouchableOpacity>
@@ -56,7 +59,7 @@ const Avaliacao = ({navigation}) => {
                         <View style={styles.card}>
                             <TouchableOpacity 
                                 style={styles.buttonCard}
-                                onPress={() => {navigation.navigate(Antropometria)}}
+                                onPress={() => {navigation.navigate("Antropometria", {aluno, avaliacao})}}
                             >
                                 <Icon name="assignment" size={50} color="#ED4747"/>
                             </TouchableOpacity>
@@ -65,7 +68,7 @@ const Avaliacao = ({navigation}) => {
                         <View style={styles.card}>
                             <TouchableOpacity 
                                 style={styles.buttonCard}
-                                onPress={() => {navigation.navigate(Dobras)}}    
+                                onPress={() => {navigation.navigate("Dobras", {aluno, avaliacao})}}    
                             >
                                 <Icon name="assignment" size={50} color="#ED4747"/>
                             </TouchableOpacity>
@@ -77,27 +80,13 @@ const Avaliacao = ({navigation}) => {
                             <TouchableOpacity style={styles.buttonCard}>
                                 <Icon name="assignment" size={50} color="#ED4747"/>
                             </TouchableOpacity>
-                            <Text style={styles.titleCard}>Avaliação Postural</Text>
-                        </View>
-                        <View style={styles.card}>
-                            <TouchableOpacity style={styles.buttonCard}>
-                                <Icon name="assignment" size={50} color="#ED4747"/>
-                            </TouchableOpacity>
-                            <Text style={styles.titleCard}>Composição Corporal</Text>
-                        </View>
-                    </View>
-                    <View style={styles.linha}>
-                        <View style={styles.card}>
-                            <TouchableOpacity style={styles.buttonCard}>
-                                <Icon name="assignment" size={50} color="#ED4747"/>
-                            </TouchableOpacity>
-                            <Text style={styles.titleCard}>Neuromotores</Text>
-                        </View>
-                        <View style={styles.card}>
-                            <TouchableOpacity style={styles.buttonCard}>
-                                <Icon name="assignment" size={50} color="#ED4747"/>
-                            </TouchableOpacity>
                             <Text style={styles.titleCard}>Relações de Apoio</Text>
+                        </View>
+                        <View style={styles.card}>
+                            <TouchableOpacity style={styles.buttonCard}>
+                                <Icon name="assignment" size={50} color="#ED4747"/>
+                            </TouchableOpacity>
+                            <Text style={styles.titleCard}>Resultados</Text>
                         </View>
                     </View>
                 </View>
