@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Avaliacoes from "./Avaliacoes";
+import { AuthContext } from "../../../../App";
+import { selecionarAluno } from "../../../services/AlunoService";
 
-const Aluno = ({navigation, route}) => {
+const Aluno = ({route, navigation}) => {
 
-    console.log(route);
+    const alunoTeste = route.params;
+
+    const {user} = useContext(AuthContext);
+    const [aluno, setAluno] = useState();
+
+    // useEffect(() => {
+    //     buscar();
+    // }, []);
+    
+
+
+    // const buscar = async() => {
+    //     const dados = await selecionarAluno(user.uid, route.params);
+    //     console.log(dados);
+    //     setAluno(dados);
+    // }
+
     return(
         <View style={styles.container}>
             <View style={styles.cima}>
@@ -13,7 +31,7 @@ const Aluno = ({navigation, route}) => {
                     <View style={styles.esqCima}>
                         <View style={styles.logo}></View>
                         <View style={styles.name}>
-                            <Text style={styles.textName}>Peronsal Fulano</Text>
+                            <Text style={styles.textName}>{user.email}</Text>
                             <Text style={styles.infoName}>CREF: 111111-G</Text>
                         </View>
                     </View>
@@ -27,14 +45,14 @@ const Aluno = ({navigation, route}) => {
             <View style={styles.baixo}>
                 <View style={styles.header}>
                     <Icon name="location-history" size={35} color="#650808"/>
-                    <Text style={styles.textHeader}>Leonan Teixeira</Text>
+                    <Text style={styles.textHeader}>{route.params.email}</Text>
                 </View>
                 <View style={styles.conteudoBaixo}>
                     <View style={styles.linha}>
                         <View style={styles.card}>
                             <TouchableOpacity 
                                 style={styles.buttonCard}
-                                onPress={() => {navigation.navigate(Avaliacoes)}}
+                                onPress={() => {navigation.navigate("Avaliacoes", alunoTeste)}}
                             >
                                 <Icon name="assignment" size={50} color="#ED4747"/>
                             </TouchableOpacity>

@@ -14,6 +14,7 @@ import Antropometria from '../pages/Personal/Aluno/Avaliacao/Antropometria';
 import Dobras from '../pages/Personal/Aluno/Avaliacao/Dobras';
 import CriarAluno from '../pages/Personal/Alunos/CriarAluno';
 import { AuthContext } from '../../App';
+import CriarAvaliacao from '../pages/Personal/Aluno/Avaliacoes/CriarAvaliacao';
 
 
 const Stack = createNativeStackNavigator();
@@ -134,6 +135,15 @@ const Routes = () => {
                         }}
                         name="CriarAluno"
                         component={CriarAluno}
+                    />
+                    <Stack.Screen
+                        options={{
+                            title:"",
+                            headerTransparent: true,
+                            headerShown: false,
+                        }}
+                        name="CriarAvaliacao"
+                        component={CriarAvaliacao}
                     />
                 </>)}
             </Stack.Navigator>

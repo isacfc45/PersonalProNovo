@@ -1,80 +1,82 @@
-import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Avaliacao from '../Avaliacao';
+import { buscarAvaliacoes } from '../../../../services/AlunoService';
+import { AuthContext } from '../../../../../App';
 
 
-const Avaliacoes = ({navigation}) => {
+const Avaliacoes = ({route, navigation}) => {
+    const {user} = useContext(AuthContext);
+
+    
+
+    const aluno = route.params;
+
+    const [avaliacoes, setAvaliacoes] = useState([]);
+
+    useEffect(() => {
+        buscar();
+    },[])
+
+    const buscar = async() => {
+        const dados = await buscarAvaliacoes(user.uid, aluno.uid);
+        setAvaliacoes(dados);
+    }
+
     return(
         <View style={styles.container}>
             <View style={styles.cima}>
                 <View style={styles.conteudoCima}>
-                    <View style={styles.logo}></View>
-                    <Text style={styles.textName}>PersonalPro</Text>
-                    <TouchableOpacity style={styles.buttonNav}>
-                        <Icon name="menu" size={40} color="#FBFBFB"/>
-                    </TouchableOpacity>
+                    <View style={styles.esqCima}>
+                        <View style={styles.logo}></View>
+                        <View style={styles.name}>
+                            <Text style={styles.textName}>{user.email}</Text>
+                            <Text style={styles.infoName}>CREF: 111111-G</Text>
+                        </View>
+                    </View>
+                    <View style={styles.dirCima}>
+                        <TouchableOpacity>
+                            <Icon name="menu" size={40} color="#FBFBFB"/>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
             <View style={styles.baixo}>
-                <View style={styles.personal}>
-                    <View style={styles.dataPersonal}>
-                        <View style={styles.logoPersonal}>
-
-                        </View>
-                        <View style={styles.infoPersonal}>
-                            <Text style={styles.nomePersonal}>Personal Fulano</Text>
-                            <Text style={styles.crefPersonal}>Cref: 11111-G</Text>
-                        </View>
-                    </View> 
-                </View>
                 <View style={styles.header}>
                     <Icon name="location-history" size={35} color="#650808"/>
-                    <Text style={styles.textHeader}>Leonan Teixeira</Text>
+                    <Text style={styles.textHeader}>{route.params.email}</Text>
                 </View>
                 <View style={styles.conteudoBaixo}>
-                    <TouchableOpacity 
-                        style={styles.cardAluno}
-                        onPress={() => {navigation.navigate(Avaliacao)}}
-                    >
-                        <View style={styles.esqCardAluno}>
-                            <View style={styles.fotoAluno}>
-                                <Icon name='assignment' size={45} color="#650808" />
-                            </View>
-                            <View style={styles.infoAluno}>
-                                <Text style={styles.nomeAluno}>Avaliação 1</Text>
-                                <Text style={styles.dataAvaliação}>Data: 05/05/2023</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={styles.cardAluno}
-                        
-                    >
-                        <View style={styles.esqCardAluno}>
-                            <View style={styles.fotoAluno}>
-                                <Icon name='assignment' size={45} color="#650808" />
-                            </View>
-                            <View style={styles.infoAluno}>
-                                <Text style={styles.nomeAluno}>Avaliação 2</Text>
-                                <Text style={styles.dataAvaliação}>Data: 05/05/2023</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={styles.cardAluno}
-                        
-                    >
-                        <View style={styles.esqCardAluno}>
-                            <View style={styles.fotoAluno}>
-                                <Icon name='assignment' size={45} color="#650808" />
-                            </View>
-                            <View style={styles.infoAluno}>
-                                <Text style={styles.nomeAluno}>Avaliação 3</Text>
-                                <Text style={styles.dataAvaliação}>Data: 05/05/2023</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
+                    <FlatList 
+                        data={avaliacoes}
+                        renderItem={ ({item}) => 
+                            <TouchableOpacity 
+                                style={styles.cardAluno}
+                                onPress={() => {navigation.navigate("Avaliacao", {item, aluno})}}
+                            >
+                                <View style={styles.esqCardAluno}>
+                                    <View style={styles.fotoAluno}>
+                                        <Icon name='assignment' size={45} color="#650808" />
+                                    </View>
+                                    <View style={styles.infoAluno}>
+                                        <Text style={styles.nomeAluno}>{item.nome}</Text>
+                                        <Text style={styles.dataAvaliação}>Data: {item.data.seconds}</Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        }
+                        keyExtractor={item => item.data}
+                        style={styles.fletList}
+                    />
+                    <View style={styles.Add}>
+                        <TouchableOpacity 
+                            style={styles.buttonAdd}
+                            onPress={() => {navigation.navigate("CriarAvaliacao", aluno)}}    
+                        >
+                            <Icon name='add' size={30} color="#ED4747" />
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         </View>
@@ -102,8 +104,12 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'space-between'
     },
-
-    buttonNav: {
+    esqCima: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    dirCima: {
         marginRight: 40,
     },
     textName: {
@@ -116,9 +122,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#FBFBFB',
         borderRadius: 40,
     },
+    name: {
+        marginLeft: 20,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     infoName: {
         fontSize: 12,
-        color: '#FBFBFB',
+        color: '#650808',
     },
     baixo: {
         flex: 1,
@@ -126,48 +138,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#FBFBFB',
         alignItems: 'center',
     },
-    personal: {
-        width: '100%',
-    },
-    dataPersonal: {
-        width: '42%',
-        marginLeft: 20,
-        marginTop: 10,
-        padding: 10,
-        backgroundColor: '#FFE4E6',
-        borderRadius: 24,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    logoPersonal: {
-        width: 30,
-        height: 30,
-        borderRadius: 25,
-        backgroundColor: '#FBFBFB',
-    },
-    infoPersonal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginLeft: 10
-    },
-    nomePersonal: {
-        fontSize: 16,
-        color: '#ED4747'
-    },
-    crefPersonal: {
-        fontSize: 12,
-        color: '#650808',
-    },
     header: {
         width: '100%',
-        marginTop: 20,
+        marginTop: 30,
         marginLeft: 30,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
         flexDirection: 'row'
     },
     textHeader: {
@@ -180,6 +156,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
+    },
+    fletList: {
+        flex: 1,
+        width: '100%',
+        display: 'flex',
+        marginLeft: 40,
+        marginTop: 30,
     },
     cardAluno: {
         width: '90%',
@@ -227,6 +210,19 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         marginLeft: 20
+    },
+    Add: {
+        width: '100%',
+        alignItems: 'flex-end'
+    },
+    buttonAdd: {
+        width: 50,
+        height: 50,
+        backgroundColor: '#650808',
+        borderRadius: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 30,
     },
 })
 

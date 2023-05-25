@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -11,38 +11,21 @@ import { FlatList } from 'react-native-gesture-handler';
 
 const Alunos = ({navigation}) => {
     const {user} = useContext(AuthContext);
+    const [lista, setLista] = useState([]);
 
-    let lista = [];
-
-
-    // const [lista, setLista] = useState([]);
+    useEffect(() => {
+        listar();
+    }, []);
+    
 
 
     const listar = async() => {
 
-        lista = await buscarAlunos(user.id);
+        // lista = await buscarAlunos(user.id);
 
-        // const dados = await buscarAlunos(user.uid);
-        // setLista(dados);
-
-        console.log(lista)
+        const dados = await buscarAlunos(user.uid);
+        setLista(dados);
     }
-    listar();
-
-    const teste = [
-        {
-            email: "Aluno 1",
-            uid: "19/05/2023"
-        },
-        {
-            email: "Aluno 2",
-            uid: "19/05/2023"
-        },
-        {
-            email: "Aluno 3",
-            uid: "19/05/2023"
-        },
-    ];
 
     return(
         <View style={styles.container}>
@@ -69,11 +52,11 @@ const Alunos = ({navigation}) => {
                 </View>
                 <View style={styles.conteudoBaixo}>
                     <FlatList 
-                        data={teste}
+                        data={lista}
                         renderItem={ ({item}) => 
                             <TouchableOpacity 
                                 style={styles.cardAluno}
-                                onPress={() => {navigation.navigate(Aluno , item )}}
+                                onPress={() => {navigation.navigate("Aluno" , item)}}
                             >
                                 <View style={styles.esqCardAluno}>
                                     <View style={styles.fotoAluno}>
@@ -81,7 +64,7 @@ const Alunos = ({navigation}) => {
                                     </View>
                                     <View style={styles.infoAluno}>
                                         <Text style={styles.nomeAluno}>{item.email}</Text>
-                                        <Text style={styles.dataAvaliação}>Data: {item.uid}</Text>
+                                        <Text style={styles.dataAvaliação}>{item.uid}</Text>
                                     </View>
                                 </View>
                                 <View style={styles.dirCardAluno}>
@@ -94,7 +77,7 @@ const Alunos = ({navigation}) => {
                                 </View>
                             </TouchableOpacity>
                         }
-                        keyExtractor={item => item.id}
+                        keyExtractor={item => item.uid}
                         style={styles.fletList}
                     />
                     
