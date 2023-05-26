@@ -16,7 +16,8 @@ const Dobras = ({navigation, route}) => {
         suprailiaca: "24",
         abdominal: "43",
         coxa: "17",
-        panturrilha: "0"
+        panturrilha: "0",
+        idade: "22"
     })
 
     const {user} = useContext(AuthContext);

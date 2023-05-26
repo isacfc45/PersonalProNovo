@@ -202,15 +202,18 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 10
+        marginLeft: 10,
+        maxWidth: 130,
     },
     nomeAluno: {
-        fontSize: 16,
-        color: '#ED4747'
+        fontSize: 14,
+        color: '#ED4747',
+        textAlign: 'center'
     },
     dataAvaliação: {
-        fontSize: 12,
-        color: '#650808'
+        fontSize: 10,
+        color: '#650808',
+        textAlign: 'center'
     },
     dirCardAluno: {
         display: 'flex',

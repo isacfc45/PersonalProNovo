@@ -98,5 +98,24 @@ export const criarDobras = async (idPersonal, idAluno, idAvaliacao, dobras) => {
         abdominal: parseFloat(dobras.abdominal),
         coxa: parseFloat(dobras.coxa),
         panturrilha: parseFloat(dobras.panturrilha),
+        idade: parseFloat(dobras.idade),
     })
+}
+
+export const buscarAntropometriaUid = async (idPersonal, idAluno, idAvaliacao) => {
+    const querySnapshot = await getDocs(collection(db, "personal", idPersonal, "alunos", idAluno, "avaliacoes", `${idAvaliacao}`, "antropometria"));
+    lista = [];
+    querySnapshot.forEach((doc) => {
+        lista.push(doc.data());
+    })
+    return lista;
+}
+
+export const buscarDobrasUid = async (idPersonal, idAluno, idAvaliacao) => {
+    const querySnapshot = await getDocs(collection(db, "personal", idPersonal, "alunos", idAluno, "avaliacoes", `${idAvaliacao}`, "dobras"));
+    lista = [];
+    querySnapshot.forEach((doc) => {
+        lista.push(doc.data());
+    })
+    return lista;
 }

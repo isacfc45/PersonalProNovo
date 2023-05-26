@@ -77,13 +77,19 @@ const Avaliacao = ({navigation, route}) => {
                     </View>
                     <View style={styles.linha}>
                         <View style={styles.card}>
-                            <TouchableOpacity style={styles.buttonCard}>
+                            <TouchableOpacity 
+                                style={styles.buttonCard}
+                                onPress={() => {navigation.navigate("Relacoes", {aluno, avaliacao})}}
+                            >
                                 <Icon name="assignment" size={50} color="#ED4747"/>
                             </TouchableOpacity>
                             <Text style={styles.titleCard}>Relações de Apoio</Text>
                         </View>
                         <View style={styles.card}>
-                            <TouchableOpacity style={styles.buttonCard}>
+                            <TouchableOpacity 
+                                style={styles.buttonCard}
+                                onPress={() => {navigation.navigate("Resultado", {aluno, avaliacao})}}
+                            >
                                 <Icon name="assignment" size={50} color="#ED4747"/>
                             </TouchableOpacity>
                             <Text style={styles.titleCard}>Resultados</Text>

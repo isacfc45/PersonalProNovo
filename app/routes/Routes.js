@@ -15,6 +15,8 @@ import Dobras from '../pages/Personal/Aluno/Avaliacao/Dobras';
 import CriarAluno from '../pages/Personal/Alunos/CriarAluno';
 import { AuthContext } from '../../App';
 import CriarAvaliacao from '../pages/Personal/Aluno/Avaliacoes/CriarAvaliacao';
+import Relacoes from '../pages/Personal/Aluno/Avaliacao/Relacoes';
+import Resultado from '../pages/Personal/Aluno/Avaliacao/Resultado';
 
 
 const Stack = createNativeStackNavigator();
@@ -144,6 +146,24 @@ const Routes = () => {
                         }}
                         name="CriarAvaliacao"
                         component={CriarAvaliacao}
+                    />
+                    <Stack.Screen
+                        options={{
+                            title:"",
+                            headerTransparent: true,
+                            headerShown: false,
+                        }}
+                        name="Relacoes"
+                        component={Relacoes}
+                    />
+                    <Stack.Screen
+                        options={{
+                            title:"",
+                            headerTransparent: true,
+                            headerShown: false,
+                        }}
+                        name="Resultado"
+                        component={Resultado}
                     />
                 </>)}
             </Stack.Navigator>
