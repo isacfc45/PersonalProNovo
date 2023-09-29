@@ -1,14 +1,26 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { AuthContext } from "../../../../../App";
+import { AlunoContext, AuthContext } from "../../../../../App";
+import { buscarAvaliacao } from "../../../../services/AvaliacaoService";
 
 
 const Avaliacao = ({navigation, route}) => {
     const {user} = useContext(AuthContext);
-    const aluno = route.params.aluno;
-    const avaliacao = route.params.item || route.params.avaliacao;
+    const {aluno} = useContext(AlunoContext);    
+    const avaliacaoUid = route.params;
+
+    const [avaliacao, setAvaliacao] = useState({});
+
+    useEffect(()=>{
+        buscar();
+    }, [])
     
+    const buscar = async () => {
+        const dado = await buscarAvaliacao(user.uid, aluno.uid, avaliacaoUid);
+        setAvaliacao(dado);
+    }
+
 
     return(
         <ScrollView style={styles.container}>
@@ -35,14 +47,14 @@ const Avaliacao = ({navigation, route}) => {
                 </View>
                 <View style={styles.avaliacaoCont}>
                     <Text style={styles.avaliacaoNome}>{avaliacao.nome}</Text>
-                    <Text style={styles.avaliacaoInfo}>{avaliacao.data.seconds}</Text>
+                    <Text style={styles.avaliacaoInfo}>{"avaliacao.data.seconds"}</Text>
                 </View>
                 <View style={styles.conteudoBaixo}>
                     <View style={styles.linha}>
                         <View style={styles.card}>
                             <TouchableOpacity 
                                 style={styles.buttonCard}
-                                onPress={() => {navigation.navigate("Anamnese", {aluno, avaliacao})}}
+                                onPress={() => {navigation.navigate("Anamnese", avaliacaoUid)}}
                             >
                                 <Icon name="assignment" size={50} color="#ED4747"/>
                             </TouchableOpacity>
@@ -59,7 +71,7 @@ const Avaliacao = ({navigation, route}) => {
                         <View style={styles.card}>
                             <TouchableOpacity 
                                 style={styles.buttonCard}
-                                onPress={() => {navigation.navigate("Antropometria", {aluno, avaliacao})}}
+                                onPress={() => {navigation.navigate("Antropometria", avaliacaoUid)}}
                             >
                                 <Icon name="assignment" size={50} color="#ED4747"/>
                             </TouchableOpacity>
@@ -68,7 +80,7 @@ const Avaliacao = ({navigation, route}) => {
                         <View style={styles.card}>
                             <TouchableOpacity 
                                 style={styles.buttonCard}
-                                onPress={() => {navigation.navigate("Dobras", {aluno, avaliacao})}}    
+                                onPress={() => {navigation.navigate("Dobras", avaliacaoUid)}}    
                             >
                                 <Icon name="assignment" size={50} color="#ED4747"/>
                             </TouchableOpacity>
@@ -79,7 +91,7 @@ const Avaliacao = ({navigation, route}) => {
                         <View style={styles.card}>
                             <TouchableOpacity 
                                 style={styles.buttonCard}
-                                onPress={() => {navigation.navigate("Relacoes", {aluno, avaliacao})}}
+                                onPress={() => {navigation.navigate("Relacoes", avaliacaoUid)}}
                             >
                                 <Icon name="assignment" size={50} color="#ED4747"/>
                             </TouchableOpacity>
@@ -88,7 +100,7 @@ const Avaliacao = ({navigation, route}) => {
                         <View style={styles.card}>
                             <TouchableOpacity 
                                 style={styles.buttonCard}
-                                onPress={() => {navigation.navigate("Resultado", {aluno, avaliacao})}}
+                                onPress={() => {navigation.navigate("Resultado", avaliacaoUid)}}
                             >
                                 <Icon name="assignment" size={50} color="#ED4747"/>
                             </TouchableOpacity>

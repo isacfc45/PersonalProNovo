@@ -62,7 +62,7 @@ function Login({ navigation }) {
                     </TouchableOpacity>
                     <Text 
                         style={styles.texto}
-                        onPress={() => {navigation.navigate(CadastroPersonal)}}
+                        onPress={() => {navigation.navigate("CadastroPersonal")}}
                     >
                         Criar conta
                     </Text>                    

@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { AuthContext } from "../../../../../../App";
-import { criarDobras } from "../../../../../services/AlunoService";
+import { AlunoContext, AuthContext } from "../../../../../../App";
+import { criarDobras } from "../../../../../services/AvaliacaoService";
 
 
 const Dobras = ({navigation, route}) => {
@@ -21,12 +21,12 @@ const Dobras = ({navigation, route}) => {
     })
 
     const {user} = useContext(AuthContext);
-    const aluno = route.params.aluno;
-    const avaliacao = route.params.avaliacao;
+    const {aluno} = useContext(AlunoContext);
+    const avaliacaoUid = route.params;
 
     const cadastroDobras = () => {
-        criarDobras(user.uid, aluno.uid, avaliacao.uid, dobras);
-        navigation.navigate("Avaliacoes", {aluno, avaliacao});
+        criarDobras(user.uid, aluno.uid, avaliacaoUid, dobras);
+        navigation.navigate("Avaliacao", avaliacaoUid);
     }
 
     return(

@@ -1,23 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { AuthContext } from "../../../../../../App";
-import { buscarAntropometriaUid, buscarDobrasUid } from "../../../../../services/AlunoService";
+import { AlunoContext, AuthContext } from "../../../../../../App";
+import { buscarAvaliacao } from "../../../../../services/AvaliacaoService";
 
 
 
 const Resultado = ({navigation, route}) => {
 
-    const [tricipital, setTricipital] = useState(0);
-    const [subescapular, setSubescapular] = useState(0);
-    const [peitoral, setPeitoral] = useState(0);
-    const [axilarMedia, setAxilarMedia] = useState(0);
-    const [abdominal, setAbdominal] = useState(0);
-    const [suprailiaca, setSuprailiaca] = useState(0);
-    const [coxa, setCoxa] = useState(0);
     const [peso, setPeso] = useState(0);
-    const [idade, setIdade] = useState(0);
-    const [estatura, setEstatura] = useState(0);
+
+    const [antropometria, setAntropometria] = useState({});
+    const [dobras, setDobras] = useState({});
     const [pesoIdealMinimo, setPesoIdealMinimo] = useState(0);
     const [pesoIdealMaximo, setPesoIdealMaximo] = useState(0);
     const [pesoMagro, setPesoMagro] = useState(0);
@@ -29,31 +23,50 @@ const Resultado = ({navigation, route}) => {
     const [resultado, setResultado] = useState("");
 
     const {user} = useContext(AuthContext);
-    const aluno = route.params.aluno;
-    const avaliacao = route.params.avaliacao;
+    const {aluno} = useContext(AlunoContext);
+    const avaliacaoUid = route.params;
+
+    // const [objAvalicao, setObjAvalicao] = useState(null);
+
 
     useEffect(() => {
-        buscarDadosAntropometria();
+        buscarDados();
     }, [])
 
-    const buscarDadosAntropometria = async () => {
-        const dadoAntropometria = await buscarAntropometriaUid(user.uid, aluno.uid, avaliacao.uid);
-        const newDadoAntropometria = dadoAntropometria[0];
-        const dadoDobras = await buscarDobrasUid(user.uid, aluno.uid, avaliacao.uid);
-        const newDadoDobras = dadoDobras[0];
-        setPeso(newDadoAntropometria.peso);
-        setEstatura(newDadoAntropometria.estatura);
-        setTricipital(newDadoDobras.tricipital);
-        setSubescapular(newDadoDobras.subescapular);
-        setPeitoral(newDadoDobras.peitoral);
-        setAxilarMedia(newDadoDobras.axilarMedia);
-        setSuprailiaca(newDadoDobras.suprailiaca);
-        setAbdominal(newDadoDobras.abdominal);
-        setCoxa(newDadoDobras.coxa);
-        setIdade(newDadoDobras.idade);
+    useEffect(()=>{
+
+        calcularResultado();
+
+    },[])
+
+    // const calcularResultados = () => {
+    //     const {antropometria} = objAvalicao;
+    //     const imc = calcularIMC(antropometria.peso, antropometria.estatura);
+
+    //     console.log(imc);
+
+    // }
+
+    // const calcularGorduraCoporal(..){
+
+    // }
+
+    // const  calcularIMC = (peso, altura) => {
+    //     imc = peso / altura;
+    //     return imc;
+    // }
+
+    const buscarDados = async () => {
+        const dado = await buscarAvaliacao(user.uid, aluno.uid, avaliacaoUid);
+        setAntropometria(dado.antropometria);
+        setDobras(()=>dado.dobras)
+
+        setPeso(()=>antropometria.peso)
+ 
+        calcularResultado(dobras.tricipital, dobras.subescapular, dobras.peitoral, dobras.axilarMedia, dobras.abdominal, dobras.suprailiaca, dobras.coxa, dado.idade, antropometria.peso, antropometria.estatura)        
     }
 
-    const calcularResultado = () => {
+    const calcularResultado = (tricipital, subescapular, peitoral, axilarMedia, abdominal, suprailiaca, coxa, idade, peso, estatura) => {
         const DC = 1.112 - 0.00043499 * (tricipital + subescapular + peitoral + axilarMedia + abdominal + suprailiaca + coxa) + 0.00000055 * (tricipital + subescapular + peitoral + axilarMedia + abdominal + suprailiaca + coxa) * 2 - 0.00028826 * (idade);
         const PG = (495/DC) - 450;
         setPercentualGordura(PG.toFixed(2));
@@ -181,7 +194,7 @@ const Resultado = ({navigation, route}) => {
                         <View style={styles.gridButton}>
                             <TouchableOpacity 
                                 style={styles.buttonResultado}
-                                onPress={() => {calcularResultado()}}
+                                onPress={() => {buscarDados()}}
                             >
                                 <Text style={styles.textButtonResultado}>Calcular</Text>
                             </TouchableOpacity>

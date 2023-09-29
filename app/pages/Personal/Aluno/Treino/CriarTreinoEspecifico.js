@@ -1,37 +1,52 @@
 import React, { useContext, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 
-import { AlunoContext, AuthContext } from "../../../../../App";
-import { criarAvaliacao } from "../../../../services/AvaliacaoService";
+import { AlunoContext, AuthContext, TreinoContext } from "../../../../../App";
+import { criarTreinoEspecifico } from "../../../../services/TreinoService";
 
 
-const CriarAvaliacao = ({route, navigation}) => {
+const CriarTreinoEspecifico = ({navigation}) => {
     const {aluno} = useContext(AlunoContext);
+    const {treino} = useContext(TreinoContext);
 
-    const [avaliacao, setAvaliacao] = useState({
-        nome: "Avaliacao x",
+    const [treinoEspecifico, setTreinoEspecifico] = useState({
+        nome: "Treino A",
+        tipo: "Peitoral",
+        observacoes: "Nenhuma"
     })
 
     const {user} = useContext(AuthContext);
 
-    const cadastrar = () => {
-        criarAvaliacao(user.uid, aluno.uid, avaliacao)
-        navigation.navigate("Avaliacoes");
+    const cadastrar = (treinoEspecifico) => {
+        criarTreinoEspecifico(user.uid, aluno.uid, treino.uid, treinoEspecifico)
+        navigation.navigate("Treino");
     }
 
     return(
         <ScrollView>
             <TextInput 
                 style={styles.input}
-                placeholder="E-mail"
-                onChangeText={(nome) => setAvaliacao({...avaliacao, nome})}
-                value={avaliacao.nome}
+                placeholder="Nome"
+                onChangeText={(nome) => setTreinoEspecifico({...treinoEspecifico, nome})}
+                
+            />
+            <TextInput 
+                style={styles.input}
+                placeholder="Tipo"
+                onChangeText={(tipo) => setTreinoEspecifico({...treinoEspecifico, tipo})}
+                value={treino.tipo}
+            />
+            <TextInput 
+                style={styles.input}
+                placeholder="Observações"
+                onChangeText={(observacao) => setTreinoEspecifico({...treinoEspecifico, observacao})}
+                value={treino.observacao}
             />
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => {cadastrar()}}
+                onPress={() => {cadastrar(treinoEspecifico)}}
             >
-                <Text style={styles.textoBotao}>Adicionar Avaliação</Text>
+                <Text style={styles.textoBotao}>Adicionar Treino</Text>
             </TouchableOpacity>
         </ScrollView>
     );
@@ -137,4 +152,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CriarAvaliacao;
+export default CriarTreinoEspecifico;

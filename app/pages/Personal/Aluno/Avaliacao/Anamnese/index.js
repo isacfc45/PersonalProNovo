@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import CheckBox from 'react-native-check-box';
-import { AuthContext } from "../../../../../../App";
-import { criarAnamnese } from "../../../../../services/AlunoService";
+// import CheckBox from 'react-native-check-box';
+import { AlunoContext, AuthContext } from "../../../../../../App";
+import { criarAnamnese } from "../../../../../services/AvaliacaoService";
 
 const Anamnese = ({navigation, route}) => {
     const [anamnese, setAnamnese] = useState({
@@ -15,12 +15,12 @@ const Anamnese = ({navigation, route}) => {
     })
 
     const {user} = useContext(AuthContext);
-    const aluno = route.params.aluno;
-    const avaliacao = route.params.avaliacao;
+    const {aluno} = useContext(AlunoContext);
+    const avaliacaoUid = route.params;
 
     const cadastroAnamnese = () => {
-        criarAnamnese(user.uid, aluno.uid, avaliacao.uid, anamnese);
-        navigation.navigate("Avaliacao", {aluno, avaliacao})
+        criarAnamnese(user.uid, aluno.uid, avaliacaoUid, anamnese);
+        navigation.navigate("Avaliacao", avaliacaoUid)
     }
 
     return(

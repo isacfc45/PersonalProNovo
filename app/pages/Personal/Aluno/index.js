@@ -1,16 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Avaliacoes from "./Avaliacoes";
-import { AuthContext } from "../../../../App";
+import { AlunoContext, AuthContext } from "../../../../App";
 import { selecionarAluno } from "../../../services/AlunoService";
 
-const Aluno = ({route, navigation}) => {
+const Aluno = ({navigation}) => {
 
-    const alunoTeste = route.params;
+    //const alunoTeste = route.params;
+
+    const {aluno} = useContext(AlunoContext);
 
     const {user} = useContext(AuthContext);
-    const [aluno, setAluno] = useState();
+    //const [aluno, setAluno] = useState();
 
     // useEffect(() => {
     //     buscar();
@@ -37,30 +39,33 @@ const Aluno = ({route, navigation}) => {
                     </View>
                     <View style={styles.dirCima}>
                         <TouchableOpacity>
-                            <Icon name="menu" size={40} color="#FBFBFB"/>
+                            <Icon name="align-justify" size={40} color="#FBFBFB"/>
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
             <View style={styles.baixo}>
                 <View style={styles.header}>
-                    <Icon name="location-history" size={35} color="#650808"/>
-                    <Text style={styles.textHeader}>{route.params.email}</Text>
+                    <Icon name="user-alt" size={35} color="#650808"/>
+                    <Text style={styles.textHeader}>{aluno.email}</Text>
                 </View>
                 <View style={styles.conteudoBaixo}>
                     <View style={styles.linha}>
                         <View style={styles.card}>
                             <TouchableOpacity 
                                 style={styles.buttonCard}
-                                onPress={() => {navigation.navigate("Avaliacoes", alunoTeste)}}
+                                onPress={() => {navigation.navigate("Avaliacoes")}}
                             >
-                                <Icon name="assignment" size={50} color="#ED4747"/>
+                                <Icon name="file-medical-alt" size={50} color="#ED4747"/>
                             </TouchableOpacity>
                             <Text style={styles.titleCard}>Avaliações</Text>
                         </View>
                         <View style={styles.card}>
-                            <TouchableOpacity style={styles.buttonCard}>
-                                <Icon name="multitrack-audio" size={50} color="#ED4747"/>
+                            <TouchableOpacity 
+                                style={styles.buttonCard}
+                                onPress={() => {navigation.navigate("Treinos")}}    
+                            >
+                                <Icon name="dumbbell" size={50} color="#ED4747"/>
                             </TouchableOpacity>
                             <Text style={styles.titleCard}>Treinos</Text>
                         </View>
@@ -68,13 +73,13 @@ const Aluno = ({route, navigation}) => {
                     <View style={styles.linha}>
                         <View style={styles.card}>
                             <TouchableOpacity style={styles.buttonCard}>
-                                <Icon name="format-list-bulleted" size={50} color="#ED4747"/>
+                                <Icon name="poll" size={50} color="#ED4747"/>
                             </TouchableOpacity>
                             <Text style={styles.titleCard}>Relatórios</Text>
                         </View>
                         <View style={styles.card}>
                             <TouchableOpacity style={styles.buttonCard}>
-                                <Icon name="attach-money" size={50} color="#ED4747"/>
+                                <Icon name="dollar-sign" size={50} color="#ED4747"/>
                             </TouchableOpacity>
                             <Text style={styles.titleCard}>Finanças</Text>
                         </View>

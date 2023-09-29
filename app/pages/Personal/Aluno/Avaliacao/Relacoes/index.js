@@ -1,42 +1,39 @@
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput, ActivityIndicator } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { AuthContext } from "../../../../../../App";
-import { buscarAntropometriaUid } from "../../../../../services/AlunoService";
+import { AlunoContext, AuthContext } from "../../../../../../App";
+import { buscarAvaliacao } from "../../../../../services/AvaliacaoService";
+import { useIsFocused } from "@react-navigation/native";
+
 
 
 
 const Relacoes = ({navigation, route}) => {
 
-    const [cintura, setCintura] = useState(0);
-    const [quadril, setQuadril] = useState(0);
-    const [estatura, setEstatura] = useState(0);
-    const [peso, setPeso] = useState(0);
+    const [antropometria, setAntropometria] = useState(null);
     const [relacao, setRelacao] = useState(0);
     const [fatorRisco, setFatorRisco] = useState("");
     const [imc, setImc] = useState(0);
     const [classificacao, setClassificacao] = useState("");
 
+    const isVisible = useIsFocused();
+
     const {user} = useContext(AuthContext);
-    const aluno = route.params.aluno;
-    const avaliacao = route.params.avaliacao;
+    const {aluno} = useContext(AlunoContext);
+    const avaliacaoUid = route.params;
 
     useEffect(() => {
         buscarDadosRelacao();
     }, [])
 
-    const buscarDadosRelacao = async () => {
-        const dado = await buscarAntropometriaUid(user.uid, aluno.uid, avaliacao.uid);
-        const newDado = dado[0];
-        setCintura(newDado.cintura);
-        setQuadril(newDado.quadril);
-        setEstatura(newDado.estatura);
-        setPeso(newDado.peso)
-    }
+    useEffect(() => {
+        buscarDadosRelacao();
+    }, [isVisible])
 
-    const calcularRelacao = () => {
-        const calculo = cintura/quadril;
-        setRelacao(calculo);
+    const buscarDadosRelacao = async () => {
+        const dado = await buscarAvaliacao(user.uid, aluno.uid, avaliacaoUid);
+        setAntropometria(dado.antropometria);
+        setRelacao(calcularRelacao(dado.antropometria.cintura, dado.antropometria.quadril));
         if(relacao < 0.95){
             setFatorRisco("Baixo");
         } else if(relacao > 0.95 && relacao < 1){
@@ -44,12 +41,8 @@ const Relacoes = ({navigation, route}) => {
         } else if(relacao >= 1) {
             setFatorRisco("Alto")
         }
-    }
-
-    const calcularImc = () => {
-        const calculo = peso/(estatura*estatura)
-        setImc(calculo.toFixed(2));
-        if(imc < 18.5){
+        setImc(calcularImc(dado.antropometria.peso, dado.antropometria.estatura).toFixed(2))
+        if(imc > 0 && imc < 18.5){
             setClassificacao("Baixo Peso");
         } else if(imc >= 18.6 && imc < 25){
             setClassificacao("Peso Normal");
@@ -62,6 +55,14 @@ const Relacoes = ({navigation, route}) => {
         } else{
             setClassificacao("Obesidade Nivel 3 (mórbida)")
         }
+    }
+
+    const calcularRelacao = (cintura, quadril) => {
+        return cintura/quadril;
+    }
+
+    const calcularImc = (peso, estatura) => {
+        return peso/(estatura*estatura)      
     }
 
     return(
@@ -83,21 +84,23 @@ const Relacoes = ({navigation, route}) => {
                 </View>
             </View>
             <View style={styles.baixo}>
+                
+            {!antropometria ? <ActivityIndicator size="large"/>:<>
                 <View style={styles.header}>
                     <Icon name="location-history" size={35} color="#650808"/>
                     <Text style={styles.textHeader}>{aluno.email}</Text>
                 </View>
-                    <Text style={styles.avaliacaoNome}>Relações de Apoio</Text>
+                <Text style={styles.avaliacaoNome}>Relações de Apoio</Text>
                 <View style={styles.conteudoBaixo}>
                     <View style={styles.gridResultado}>
                         <Text style={styles.tituloGrid}>Relação cintura/quadril</Text>
                         <View style={styles.linhaGrid}>
                             <Text style={styles.textoGrid}>Circunferência cintura: </Text>
-                            <Text style={styles.resultadoGrid}>{cintura}</Text>
+                            <Text style={styles.resultadoGrid}>{antropometria.cintura.toFixed(2)}</Text>
                         </View>
                         <View style={styles.linhaGrid}>
                             <Text style={styles.textoGrid}>Circunferência quadril: </Text>
-                            <Text style={styles.resultadoGrid}>{quadril}</Text>
+                            <Text style={styles.resultadoGrid}>{antropometria.quadril.toFixed(2)}</Text>
                         </View>
                         <View style={styles.linhaGrid}>
                             <Text style={styles.textoGrid}>Relação: </Text>
@@ -110,7 +113,7 @@ const Relacoes = ({navigation, route}) => {
                         <View style={styles.gridButton}>
                             <TouchableOpacity 
                                 style={styles.buttonResultado}
-                                onPress={() => {calcularRelacao()}}
+                                // onPress={() => {calcularRelacao()}}
                             >
                                 <Text style={styles.textButtonResultado}>Calcular</Text>
                             </TouchableOpacity>
@@ -120,11 +123,11 @@ const Relacoes = ({navigation, route}) => {
                         <Text style={styles.tituloGrid}>Indice de Massa Muscular(IMC)</Text>
                         <View style={styles.linhaGrid}>
                             <Text style={styles.textoGrid}>Estatura: </Text>
-                            <Text style={styles.resultadoGrid}>{estatura}</Text>
+                            <Text style={styles.resultadoGrid}>{antropometria.estatura}</Text>
                         </View>
                         <View style={styles.linhaGrid}>
                             <Text style={styles.textoGrid}>Massa Corporal: </Text>
-                            <Text style={styles.resultadoGrid}>{peso}</Text>
+                            <Text style={styles.resultadoGrid}>{antropometria.peso}</Text>
                         </View>
                         <View style={styles.linhaGrid}>
                             <Text style={styles.textoGrid}>IMC: </Text>
@@ -137,13 +140,14 @@ const Relacoes = ({navigation, route}) => {
                         <View style={styles.gridButton}>
                             <TouchableOpacity 
                                 style={styles.buttonResultado}
-                                onPress={() => {calcularImc()}}
+                                onPress={() => {buscarDadosRelacao()}}
                             >
                                 <Text style={styles.textButtonResultado}>Calcular</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </View>
+                </>}
             </View>
         </ScrollView>
     );

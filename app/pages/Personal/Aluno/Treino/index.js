@@ -1,33 +1,55 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useContext, useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Avaliacao from '../Avaliacao';
-import { buscarAvaliacoes } from '../../../../services/AvaliacaoService';
-import { AlunoContext, AuthContext } from '../../../../../App';
-import { useIsFocused } from '@react-navigation/native';
+import { AlunoContext, AuthContext, TreinoContext, TreinoEspeficificoContext } from "../../../../../App";
+import { buscarTreino } from "../../../../services/TreinoService";
+import { FlatList } from "react-native";
 
 
-const Avaliacoes = ({navigation}) => {
+const Treino = ({navigation, route}) => {
     const {user} = useContext(AuthContext);
-    const isVisible = useIsFocused();
-   
+    const {aluno} = useContext(AlunoContext);    
+    const treinoUid = route.params;
 
-    const {aluno} = useContext(AlunoContext);
+    const {treino} = useContext(TreinoContext);
 
-    const [avaliacoes, setAvaliacoes] = useState([]);
+    const {treinoEspecifico, setTreinoEspecifico} = useContext(TreinoEspeficificoContext);
 
-    useEffect(() => {
-        buscar();
-    },[isVisible])
-
-
-    const buscar = async() => {
-        const dados = await buscarAvaliacoes(user.uid, aluno.uid);
-        setAvaliacoes(dados);
+    const selecionarTreinoEspecifico = (treinoEspecifico) => {
+        setTreinoEspecifico(treinoEspecifico)
+        navigation.navigate("Exercicios");
     }
 
+    // useEffect(()=>{
+    //     buscar();
+    // }, [])
+    
+    const treinos = [
+        {
+            nome: "Treino A",
+            tipo: "Peito e Triceps",
+            observacoes: "Nenhuma"
+        },
+        {
+            nome: "Treino B",
+            tipo: "Peito e Triceps",
+            observacoes: "Nenhuma"
+        },
+        {
+            nome: "Treino C",
+            tipo: "Peito e Triceps",
+            observacoes: "Nenhuma"
+        }
+    ]
+
+    const buscar = async () => {
+        const dado = await buscarTreino(user.uid, aluno.uid, treinoUid);
+        setTreino(dado);
+    }
+
+
     return(
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.cima}>
                 <View style={styles.conteudoCima}>
                     <View style={styles.esqCima}>
@@ -49,13 +71,17 @@ const Avaliacoes = ({navigation}) => {
                     <Icon name="location-history" size={35} color="#650808"/>
                     <Text style={styles.textHeader}>{aluno.email}</Text>
                 </View>
+                <View style={styles.avaliacaoCont}>
+                    <Text style={styles.avaliacaoNome}>{treino.nome}</Text>
+                    <Text style={styles.avaliacaoInfo}>{"avaliacao.data.seconds"}</Text>
+                </View>
                 <View style={styles.conteudoBaixo}>
                     <FlatList 
-                        data={avaliacoes}
+                        data={treinos}
                         renderItem={ ({item}) => 
                             <TouchableOpacity 
                                 style={styles.cardAluno}
-                                onPress={() => {navigation.navigate("Avaliacao", item.uid)}}
+                                onPress={() => {selecionarTreinoEspecifico(item)}}
                             >
                                 <View style={styles.esqCardAluno}>
                                     <View style={styles.fotoAluno}>
@@ -63,7 +89,10 @@ const Avaliacoes = ({navigation}) => {
                                     </View>
                                     <View style={styles.infoAluno}>
                                         <Text style={styles.nomeAluno}>{item.nome}</Text>
-                                        <Text style={styles.dataAvaliação}>Data: {item.data.seconds}</Text>
+                                        <View>
+                                            <Text style={styles.dataAvaliação}>Tipo: {item.tipo}</Text>
+                                            <Text style={styles.dataAvaliação}>Observações: {item.observacoes}</Text>
+                                        </View>
                                     </View>
                                 </View>
                             </TouchableOpacity>
@@ -74,22 +103,21 @@ const Avaliacoes = ({navigation}) => {
                     <View style={styles.Add}>
                         <TouchableOpacity 
                             style={styles.buttonAdd}
-                            onPress={() => {navigation.navigate("CriarAvaliacao")}}    
+                            onPress={() => {navigation.navigate("CriarTreinoEspecifico", treinoUid)}}    
                         >
                             <Icon name='add' size={30} color="#ED4747" />
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+
     },
     cima: {
         width: '100%',
@@ -152,6 +180,19 @@ const styles = StyleSheet.create({
         fontSize: 24,
         color: '#650808',
         marginLeft: 10
+    },
+    avaliacaoCont: {
+        marginTop: 20,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    avaliacaoNome: {
+        fontSize: 24,
+        color: '#ED4747'
+    },
+    avaliacaoInfo: {
+        color: '#650808'
     },
     conteudoBaixo: {
         flex: 1,
@@ -226,6 +267,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginRight: 30,
     },
-})
+});
 
-export default Avaliacoes;
+export default Treino;

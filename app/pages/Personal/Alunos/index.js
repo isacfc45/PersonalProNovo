@@ -5,20 +5,26 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Aluno from '../Aluno';
 import CriarAluno from './CriarAluno';
 import { buscarAlunos } from '../../../services/AlunoService';
-import { AuthContext } from '../../../../App';
+import { AlunoContext, AuthContext } from '../../../../App';
 import ListarAlunos from './components/ListarAlunos';
 import { FlatList } from 'react-native-gesture-handler';
 
 const Alunos = ({navigation}) => {
     const {user} = useContext(AuthContext);
+
+    const {aluno, setAluno} = useContext(AlunoContext);
+
     const [lista, setLista] = useState([]);
 
     useEffect(() => {
         listar();
     }, []);
+
+    const selecionarAluno = (aluno) => {
+        setAluno(aluno);
+        navigation.navigate("Aluno")
+    }
     
-
-
     const listar = async() => {
 
         // lista = await buscarAlunos(user.id);
@@ -56,7 +62,7 @@ const Alunos = ({navigation}) => {
                         renderItem={ ({item}) => 
                             <TouchableOpacity 
                                 style={styles.cardAluno}
-                                onPress={() => {navigation.navigate("Aluno" , item)}}
+                                onPress={() => {selecionarAluno(item)}}
                             >
                                 <View style={styles.esqCardAluno}>
                                     <View style={styles.fotoAluno}>

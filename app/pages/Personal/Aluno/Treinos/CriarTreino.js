@@ -2,21 +2,21 @@ import React, { useContext, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 
 import { AlunoContext, AuthContext } from "../../../../../App";
-import { criarAvaliacao } from "../../../../services/AvaliacaoService";
+import { criarTreino } from "../../../../services/TreinoService";
 
 
-const CriarAvaliacao = ({route, navigation}) => {
+const CriarTreino = ({route, navigation}) => {
     const {aluno} = useContext(AlunoContext);
 
-    const [avaliacao, setAvaliacao] = useState({
-        nome: "Avaliacao x",
+    const [treino, setTreino] = useState({
+        nome: "Treino x",
     })
 
     const {user} = useContext(AuthContext);
 
     const cadastrar = () => {
-        criarAvaliacao(user.uid, aluno.uid, avaliacao)
-        navigation.navigate("Avaliacoes");
+        criarTreino(user.uid, aluno.uid, treino)
+        navigation.navigate("Treinos");
     }
 
     return(
@@ -24,14 +24,14 @@ const CriarAvaliacao = ({route, navigation}) => {
             <TextInput 
                 style={styles.input}
                 placeholder="E-mail"
-                onChangeText={(nome) => setAvaliacao({...avaliacao, nome})}
-                value={avaliacao.nome}
+                onChangeText={(nome) => setTreino({...treino, nome})}
+                value={treino.nome}
             />
             <TouchableOpacity
                 style={styles.button}
                 onPress={() => {cadastrar()}}
             >
-                <Text style={styles.textoBotao}>Adicionar Avaliação</Text>
+                <Text style={styles.textoBotao}>Adicionar Treino</Text>
             </TouchableOpacity>
         </ScrollView>
     );
@@ -137,4 +137,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CriarAvaliacao;
+export default CriarTreino;

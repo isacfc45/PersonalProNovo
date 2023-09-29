@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { AuthContext } from "../../../../../../App";
-import { criarAntropometria } from "../../../../../services/AlunoService";
+import { AlunoContext, AuthContext } from "../../../../../../App";
+import { criarAntropometria } from "../../../../../services/AvaliacaoService";
 
 const Antropometria = ({navigation, route}) => {
     const [antropometria, setAntropometria] = useState({
@@ -25,12 +25,12 @@ const Antropometria = ({navigation, route}) => {
     })
 
     const {user} = useContext(AuthContext);
-    const aluno = route.params.aluno;
-    const avaliacao = route.params.avaliacao;
+    const {aluno} = useContext(AlunoContext);
+    const avaliacaoUid = route.params;
 
     const cadastroAntropometria = () => {
-        criarAntropometria(user.uid, aluno.uid, avaliacao.uid, antropometria);
-        navigation.navigate("Avaliacao", {aluno, avaliacao});
+        criarAntropometria(user.uid, aluno.uid, avaliacaoUid, antropometria);
+        navigation.navigate("Avaliacao", avaliacaoUid);
     }
 
     return(

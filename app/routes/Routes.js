@@ -17,6 +17,13 @@ import { AuthContext } from '../../App';
 import CriarAvaliacao from '../pages/Personal/Aluno/Avaliacoes/CriarAvaliacao';
 import Relacoes from '../pages/Personal/Aluno/Avaliacao/Relacoes';
 import Resultado from '../pages/Personal/Aluno/Avaliacao/Resultado';
+import Treinos from '../pages/Personal/Aluno/Treinos';
+import CriarTreino from '../pages/Personal/Aluno/Treinos/CriarTreino';
+import Treino from '../pages/Personal/Aluno/Treino';
+// import TreinoEspecifico from '../pages/Personal/Aluno/Treino/TreinoEspecifico';
+import CriarTreinoEspecifico from '../pages/Personal/Aluno/Treino/CriarTreinoEspecifico';
+import Exercicios from '../pages/Personal/Aluno/Exercicios';
+import AdicionarExercicio from '../pages/Personal/Aluno/Exercicios/AdicionarExercicio';
 
 
 const Stack = createNativeStackNavigator();
@@ -164,6 +171,60 @@ const Routes = () => {
                         }}
                         name="Resultado"
                         component={Resultado}
+                    />
+                    <Stack.Screen
+                        options={{
+                            title:"",
+                            headerTransparent: true,
+                            headerShown: false,
+                        }}
+                        name="Treinos"
+                        component={Treinos}
+                    />
+                    <Stack.Screen
+                        options={{
+                            title:"",
+                            headerTransparent: true,
+                            headerShown: false,
+                        }}
+                        name="CriarTreino"
+                        component={CriarTreino}
+                    />
+                    <Stack.Screen
+                        options={{
+                            title:"",
+                            headerTransparent: true,
+                            headerShown: false,
+                        }}
+                        name="Treino"
+                        component={Treino}
+                    />
+                    <Stack.Screen
+                        options={{
+                            title:"",
+                            headerTransparent: true,
+                            headerShown: false,
+                        }}
+                        name="CriarTreinoEspecifico"
+                        component={CriarTreinoEspecifico}
+                    />
+                    <Stack.Screen
+                        options={{
+                            title:"",
+                            headerTransparent: true,
+                            headerShown: false,
+                        }}
+                        name="Exercicios"
+                        component={Exercicios}
+                    />
+                    <Stack.Screen
+                        options={{
+                            title:"",
+                            headerTransparent: true,
+                            headerShown: false,
+                        }}
+                        name="AdicionarExercicio"
+                        component={AdicionarExercicio}
                     />
                 </>)}
             </Stack.Navigator>

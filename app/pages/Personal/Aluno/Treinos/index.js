@@ -1,20 +1,25 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Avaliacao from '../Avaliacao';
-import { buscarAvaliacoes } from '../../../../services/AvaliacaoService';
-import { AlunoContext, AuthContext } from '../../../../../App';
+import { buscarTreinos } from '../../../../services/TreinoService';
+import { AlunoContext, AuthContext, TreinoContext } from '../../../../../App';
 import { useIsFocused } from '@react-navigation/native';
 
 
-const Avaliacoes = ({navigation}) => {
+const Treinos = ({navigation}) => {
     const {user} = useContext(AuthContext);
     const isVisible = useIsFocused();
    
 
     const {aluno} = useContext(AlunoContext);
+    const {treino, setTreino} = useContext(TreinoContext);
 
-    const [avaliacoes, setAvaliacoes] = useState([]);
+    const selectionarTreino = (treino) => {
+        setTreino(treino);
+        navigation.navigate("Treino")
+    }
+
+    const [treinos, setTreinos] = useState([]);
 
     useEffect(() => {
         buscar();
@@ -22,8 +27,8 @@ const Avaliacoes = ({navigation}) => {
 
 
     const buscar = async() => {
-        const dados = await buscarAvaliacoes(user.uid, aluno.uid);
-        setAvaliacoes(dados);
+        const dados = await buscarTreinos(user.uid, aluno.uid);
+        setTreinos(dados);
     }
 
     return(
@@ -51,11 +56,11 @@ const Avaliacoes = ({navigation}) => {
                 </View>
                 <View style={styles.conteudoBaixo}>
                     <FlatList 
-                        data={avaliacoes}
+                        data={treinos}
                         renderItem={ ({item}) => 
                             <TouchableOpacity 
                                 style={styles.cardAluno}
-                                onPress={() => {navigation.navigate("Avaliacao", item.uid)}}
+                                onPress={() => {selectionarTreino(item)}}
                             >
                                 <View style={styles.esqCardAluno}>
                                     <View style={styles.fotoAluno}>
@@ -63,18 +68,21 @@ const Avaliacoes = ({navigation}) => {
                                     </View>
                                     <View style={styles.infoAluno}>
                                         <Text style={styles.nomeAluno}>{item.nome}</Text>
-                                        <Text style={styles.dataAvaliação}>Data: {item.data.seconds}</Text>
+                                        <View>
+                                            <Text style={styles.dataAvaliação}>Data Inicio: {"item.dataInicio.seconds"}</Text>
+                                            <Text style={styles.dataAvaliação}>Data Fim: {"item.dataFim.seconds"}</Text>
+                                        </View>
                                     </View>
                                 </View>
                             </TouchableOpacity>
                         }
                         keyExtractor={item => item.data}
-                        style={styles.flatList}
+                        style={styles.fletList}
                     />
                     <View style={styles.Add}>
                         <TouchableOpacity 
                             style={styles.buttonAdd}
-                            onPress={() => {navigation.navigate("CriarAvaliacao")}}    
+                            onPress={() => {navigation.navigate("CriarTreino")}}    
                         >
                             <Icon name='add' size={30} color="#ED4747" />
                         </TouchableOpacity>
@@ -159,7 +167,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '100%',
     },
-    flatList: {
+    fletList: {
         flex: 1,
         width: '100%',
         display: 'flex',
@@ -228,4 +236,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default Avaliacoes;
+export default Treinos;
